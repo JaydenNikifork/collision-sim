@@ -1,7 +1,7 @@
 import './App.css';
 import { Stage, Layer, Circle, Line } from 'react-konva';
 import React from 'react';
-import { pyth, area, momentum, elasCollision, getAngle } from './helpers';
+import { pyth, area, momentum, elasCollision, getAngle, getXVel, getYVel } from './helpers';
 
 function update() {
   for (let i = 0; i < cirData.length - 1; i++) {
@@ -20,7 +20,7 @@ function update() {
 
 function checkCollision(cir1, cir2) {
   if (pyth(cirData[cir1][2][0] - cirData[cir2][2][0], cirData[cir1][2][1] - cirData[cir2][2][1]) < cirData[cir1][1] + cirData[cir2][1]) {
-    console.log("collide");
+    // console.log("collide");
     return true;
   }
 }
@@ -30,29 +30,30 @@ function collide(cir1, cir2) {
   let radius = cirData[cir1][1] + cirData[cir2][1];
   let angle = getAngle(cirData[cir1][2][0] - cirData[cir2][2][0], cirData[cir1][2][1] - cirData[cir2][2][1]);
   let normal = angle + Math.PI/2;
-  //console.log(angle*180/Math.PI);
+  
   if (distance < radius) {
     cirData[cir1][2][0] += (radius - distance) / 2 * Math.cos(angle);
     cirData[cir2][2][0] -= (radius - distance) / 2 * Math.cos(angle);
     cirData[cir1][2][1] += (radius - distance) / 2 * Math.sin(angle);
     cirData[cir2][2][1] -= (radius - distance) / 2 * Math.sin(angle);
   }
+
   let m1 = area(cirData[cir1][1]);
   let m2 = area(cirData[cir2][1]);
   let angle1 = getAngle(cirData[cir1][0][0], cirData[cir1][0][1]);
   let angle2 = getAngle(cirData[cir2][0][0], cirData[cir2][0][1]);
-  let v1X = (m1 - m2) / (m1 + m2) * cirData[cir1][0][0] + 2 * m2 / (m1 + m2) * cirData[cir2][0][0];
-  let v1Y = (m1 - m2) / (m1 + m2) * cirData[cir1][0][1] + 2 * m2 / (m1 + m2) * cirData[cir2][0][1];
-  let v2X = (m2 - m1) / (m1 + m2) * cirData[cir2][0][0] + 2 * m1 / (m1 + m2) * cirData[cir1][0][0];
-  let v2Y = (m2 - m1) / (m1 + m2) * cirData[cir2][0][1] + 2 * m1 / (m1 + m2) * cirData[cir1][0][1];
-  let v1 = pyth(v1X, v1Y);
-  let v2 = pyth(v2X, v2Y);
-  angle1 = 2 * normal - angle1;
-  angle2 = 2 * normal - angle2;
-  // v1X = v1 * Math.cos(angle1);
-  // v1Y = v1 * Math.sin(angle1);
-  // v2X = v2 * Math.cos(angle2);
-  // v2Y = v2 * Math.sin(angle2);
+  // let v1X = (m1 - m2) / (m1 + m2) * cirData[cir1][0][0] + 2 * m2 / (m1 + m2) * cirData[cir2][0][0];
+  // let v1Y = (m1 - m2) / (m1 + m2) * cirData[cir1][0][1] + 2 * m2 / (m1 + m2) * cirData[cir2][0][1];
+  // let v2X = (m2 - m1) / (m1 + m2) * cirData[cir2][0][0] + 2 * m1 / (m1 + m2) * cirData[cir1][0][0];
+  // let v2Y = (m2 - m1) / (m1 + m2) * cirData[cir2][0][1] + 2 * m1 / (m1 + m2) * cirData[cir1][0][1];
+
+  let v1 = Math.max(pyth(cirData[cir1][0][0], cirData[cir1][0][1]) * 0.8, 0);
+  let v2 = Math.max(pyth(cirData[cir2][0][0], cirData[cir2][0][1]) * 0.8, 0);
+
+  let v1X = getXVel(m1, m2, v1, v2, angle1, angle2, angle);
+  let v1Y = getYVel(m1, m2, v1, v2, angle1, angle2, angle);
+  let v2X = getXVel(m2, m1, v2, v1, angle2, angle1, angle);
+  let v2Y = getYVel(m2, m1, v2, v1, angle2, angle1, angle);
 
   cirData[cir1][0] = [v1X, v1Y];
   cirData[cir2][0] = [v2X, v2Y];
@@ -72,6 +73,8 @@ function wallBounce(cir) {
     cirData[cir][0][1] = Math.abs(cirData[cir][0][1]) * -1;
   }
 }
+
+//window.onscroll = (e) =>
 
 setInterval(update, 1000/60);
 
@@ -111,9 +114,9 @@ class CollidingCircle extends React.Component {
   }
 }
 
-var cirData = [[[3, 8], 80, [300, 300], "green"],
-               [[6, 2], 100, [900, 400], "blue"],
-               [[4, -2], 140, [600, 600], "red"]];
+var cirData = [[[10, 2], 80, [300, 300], "green"],
+               [[6, 12], 100, [700, 200], "blue"],
+               [[4, -12], 140, [600, 600], "red"]];
 
 var curcles = cirData.map((data, index) => <CollidingCircle key={index} index={index} speed={data[0]} 
                                                          radius={data[1]} pos={data[2]} color={data[3]} />);
