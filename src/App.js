@@ -124,8 +124,9 @@ class CollidingCircle extends React.Component {
 var cirData = [];
 
 function generateCircles() {
-  for (let i = 0; i < getRand(3, 5); i++) {
-    cirData.push([[getRand(-15, 15), getRand(-15, 15)], getRand(10, 200), [getRand(100, 1000), getRand(100, 500)], '#8080ff'])
+  for (let i = 0; i < getRand(4, 7); i++) {
+    cirData.push([[getRand(-15, 15), getRand(-15, 15)], getRand(50, 200), 
+                  [getRand(0, window.innerWidth), getRand(0, window.innerHeight)], '#8080ff'])
   }
 }
 generateCircles();
@@ -165,6 +166,10 @@ scrollbar.addListener(() => {
   ["Projects", 1]
 ];
 
+function asdf(asd) {
+  console.log(asd);
+}
+
 class Page extends React.Component {
   constructor() {
     super();
@@ -174,16 +179,15 @@ class Page extends React.Component {
     ];
     this.buttons = buttonList.map(function(item, index) {
       return(
-        <button className="button" key={index} onClick={ () => this.pageChange(index) }>{item[0]}</button>
-      )
-    });
+        <button className="button" key={index} onClick={() => this.handleClick(index)}>{item[0]}</button>
+      );
+    }, this);
     this.state = {
       page: this.pages[0]
     };
-  }
-
-  pageChange(index) {
-    console.log(index);
+  }  
+  
+  handleClick(index) {
     this.setState({page: this.pages[index]});
   }
 
@@ -199,11 +203,20 @@ class Page extends React.Component {
   }
 }
 
+// class Scene extends React.Component {
+//   constructor() {
+//     super();
+//     this.state = {
+//       height: window.
+//     }
+//   }
+// }
+
 function App() {
   return (
     <div className='App'>
       <div className='list-data' style={{display: 'flex', maxHeight: window.innerHeight}}>
-          <Stage className='stage' width={window.innerWidth} height={window.innerHeight * 2}>
+          <Stage className='stage' width={window.innerWidth} height={window.innerHeight}>
             <Layer>
               <Html>
                 <body>

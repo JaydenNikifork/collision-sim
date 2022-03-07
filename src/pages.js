@@ -1,11 +1,9 @@
-import React from 'react';
-
 export function About() {
     return(
         <>
             <div className="main-header">
                 <div className="title">
-                <h1>Jayden Nikifork</h1>
+                    <h1>Jayden Nikifork</h1>
                 </div>
                 <p>My E-Portfolio Site.</p>
             </div>
@@ -29,6 +27,72 @@ export function About() {
 
 export function Projects() {
     return(
-        <h1>lmao</h1>
+        <>
+            <div className="main-header">
+                <h1 className="projects-header">My Projects</h1>
+            </div>
+            <div className="sub-header">
+                <h1>QLearn</h1>
+                <p>
+                    I'm sure by now all of us students are tired of the annoying homemade homework websites we are forced to use in our classNamees. With QLearn, assigning and completing
+                    homework is made easy. QLearn is a very simple userfriendly homework assigning website in which teachers can post custom announcements and problem sets for their
+                    students. Likewise, students can then submit their answers to the problem sets which can then be viewed by the teacher.
+                    <br /><br />
+                    Developed using: Python, Flask, Jinja2, Bootstrap, MySQL, HTML, and CSS
+                </p>
+            </div>
+            <div className="sub-header">
+                <h1>Money Printer</h1>
+                <p>
+                    Everyone wishes they could discover a way to make quick passive income. Well, the console based application, Money Printer, might just be that. Money Printer is
+                    a mock cryptocurrency trading bot that trades on a minutely timeframe. Money Printer acquires data on various coins via Kraken's crypto exchange API, and then calculates
+                    formulas for common trading indicators such as the relative strength index. From there, Money Printer searches for trends and signals amongst the indicators in order
+                    to determine the opportune buy and sell timings of cryptocurrencies. So far before fees, Money Printer actually has the ability to make money especially during
+                    bullish markets, meaning it might be soon time to let it trade on my real portfolio...
+                    <br /><br />
+                    Developed using: Python, and Kraken exchange API
+                </p>
+            </div>
+            <div className="sub-header">
+                <h1>Photo Filter</h1>
+                <p>
+                    Well, Photoshop has definitely beaten me to this idea... Anyways, photo filter is a console based application which can apply various imaging filters
+                    to PNG files. The filters include, grayscale, blur, reflection, and edge detection. What the program does, is it takes in a PNG file and filter type via command line
+                    arguement, and then writes a new PNG file with the requested filter applied to the requested image.
+                    <br /><br />
+                    Developed using: C
+                </p>
+            </div>
+            <div className="sub-header">
+                <h1>Spell Checker</h1>
+                <p>
+                    Spell checkers are very common amongst many applications, soo why not make my own. Pretty much all this application does is take in 2 text files, one containing
+                    a piece of text to be spell checked, and another that contains a dictionary, then a list of words that are spelled wrong are printed in the console. The 
+                    application then formats the dictionary into a hash table which significantly reduces runtime. From there the program runs through the text and checks each 
+                    word to see if it also exists in the hash table, if not the word is considered misspelled and is printed in the console.
+                    <br /><br />
+                    Developed using: C
+                </p>
+            </div>
+            <div className="sub-header">
+                <h1>Games Recreations</h1>
+                <h2>Battleship</h2>
+                <p>
+                    Player vs. AI Battleship game
+                    <br />
+                    Developed using: Java
+                </p>
+                <h2>Chess</h2>
+                <p>
+                    2 Player Chess game
+                    <br />
+                    Developed using: Java
+                </p>
+                <h2>Sudoku</h2>
+                <p>
+                    Developed using: Python
+                </p>
+            </div>
+        </>
     );
 }
