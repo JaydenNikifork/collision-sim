@@ -9,7 +9,10 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-konva": "^17.0.2-5",
-    "react-scripts": "5.0.0",
+    "react-konva-utils": "^0.2.0",
+    "react-scripts": "^5.0.0",
+    "smooth-scrollbar": "^8.7.4",
+    "smooth-scrollbar-react": "^2.3.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
