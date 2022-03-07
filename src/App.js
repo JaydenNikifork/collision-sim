@@ -2,12 +2,13 @@ import './App.css';
 import { Stage, Layer, Circle, Line } from 'react-konva';
 import React from 'react';
 import { useEffect } from 'react';
-import { pyth, area, momentum, elasCollision, getAngle, getXVel, getYVel } from './helpers';
-//import { Scrollbar } from 'smooth-scrollbar-react';
-import Scrollbar from 'smooth-scrollbar';
+import { pyth, area, momentum, elasCollision, getAngle, getXVel, getYVel, getRand } from './helpers';
+import Scrollbar, { ScrollbarPlugin } from 'smooth-scrollbar';
 import { Html } from 'react-konva-utils';
+import { About, Projects } from './pages';
 
-var scrollPos = window.scrollY;
+var scrollPosX;
+var scrollPosY;
 var bounceSlow = 0.8;
 
 function update() {
@@ -17,7 +18,8 @@ function update() {
         collide(i, j);
       }
     }
-    scrollPos = scrollbar.offset.y;
+    scrollPosX = scrollbar.offset.x;
+    scrollPosY = scrollbar.offset.y;
   }
   for (let i = 0; i < cirData.length; i++) {
     wallBounce(i);
@@ -67,10 +69,10 @@ function collide(cir1, cir2) {
 }
 
 function wallBounce(cir) {
-  if (cirData[cir][2][0] - cirData[cir][1] <= 0) {
+  if (cirData[cir][2][0] - cirData[cir][1] <= scrollbar.offset.x) {
     cirData[cir][0][0] = Math.abs(cirData[cir][0][0]);
   }
-  else if (cirData[cir][2][0] + cirData[cir][1] >= window.innerWidth) {
+  else if (cirData[cir][2][0] + cirData[cir][1] >= scrollbar.offset.x + window.innerWidth) {
     cirData[cir][0][0] = Math.abs(cirData[cir][0][0]) * -1;
   }
   if (cirData[cir][2][1] - cirData[cir][1] <= scrollbar.offset.y) {
@@ -119,13 +121,17 @@ class CollidingCircle extends React.Component {
   }
 }
 
-function generateCircles() {
-  
-}
+var cirData = [];
 
-var cirData = [[[10, 2], 80, [300, 300], "#8080ff"],
-               [[6, 12], 100, [700, 200], "#8080ff"],
-               [[4, -12], 140, [600, 600], "#8080ff"]];
+function generateCircles() {
+  for (let i = 0; i < getRand(3, 5); i++) {
+    cirData.push([[getRand(-15, 15), getRand(-15, 15)], getRand(10, 200), [getRand(100, 1000), getRand(100, 500)], '#8080ff'])
+  }
+}
+generateCircles();
+// var cirData = [[[10, 2], 80, [300, 600], "#8080ff"],
+//                [[6, 12], 100, [600, 600], "#8080ff"],
+//                [[4, -12], 140, [600, 600], "#8080ff"]];
 
 var circles = cirData.map((data, index) => <CollidingCircle key={index} index={index} speed={data[0]} 
                                                          radius={data[1]} pos={data[2]} color={data[3]} />);
@@ -134,14 +140,64 @@ var options = {
   damping: 0.05
 }
 
+class MobilePlugin extends ScrollbarPlugin {
+  static pluginName = 'mobile';
+  static defaultOptions = {
+    speed: 0.5
+  };
+}
+
+Scrollbar.use(MobilePlugin);
 const scrollbar = Scrollbar.init(document.body, options);
+
 scrollbar.addListener(() => {
-  let velIncrease = (scrollbar.offset.y - scrollPos) / 50;
+  let velIncreaseX = (scrollbar.offset.x - scrollPosX) / 50;
+  let velIncreaseY = (scrollbar.offset.y - scrollPosY) / 50;
   
   for (let i = 0; i < cirData.length; i++) {
-    cirData[i][0][1] += velIncrease;
+    cirData[i][0][0] += velIncreaseX;
+    cirData[i][0][1] += velIncreaseY;
   }
 })
+
+ const buttonList = [
+  ["About Me", 0],
+  ["Projects", 1]
+];
+
+class Page extends React.Component {
+  constructor() {
+    super();
+    this.pages = [
+      <About />,
+      <Projects />
+    ];
+    this.buttons = buttonList.map(function(item, index) {
+      return(
+        <button className="button" key={index} onClick={ () => this.pageChange(index) }>{item[0]}</button>
+      )
+    });
+    this.state = {
+      page: this.pages[0]
+    };
+  }
+
+  pageChange(index) {
+    console.log(index);
+    this.setState({page: this.pages[index]});
+  }
+
+  render() {
+    return(
+      <>
+        <div className="tab-bar">
+          {this.buttons}
+        </div>
+        {this.state.page}
+      </>
+    );
+  }
+}
 
 function App() {
   return (
@@ -151,29 +207,7 @@ function App() {
             <Layer>
               <Html>
                 <body>
-                    <div class="tab-bar">
-                        <button class="button" onclick="location.href='index.html'">About Me</button>
-                        <button class="button" onclick="location.href='projects.html'">Projects</button>
-                        <button class="button" onclick="location.href='resume.pdf'">Résumé</button>
-                    </div>
-                    <div class="main-header">
-                        <h1>Jayden Nikifork</h1>
-                        <p>My E-Portfolio Site.</p>
-                    </div>
-                    <div class="sub-header about">
-                        <h1>About Me</h1>
-                        <p>
-                            Hello everyone, my name is Jayden Nikifork and I am currently a first year student at McMaster's general engineering program. Despite being an engineering student,
-                            my passion lies in software development which is why I am planning on specializing in software engineering come second year. This E-Portfolio website that I have created
-                            from scratch is designed to showcase my coding projects as well as my real life accomplishments. I have a few--what are in my opinion--cool projects right now and will
-                            hopefully have more, even cooler projects to come in the future. Anyways, back to who I am, outside of coding I love althletics, especially body building, and track and
-                            field. Back in elementary and high school I used to participate semi-successfully on the track team, and more recently during my time in high school I was a
-                            frequent member of the school's fitness club. To round out my hobbies, I also play League of Legends (peak elo: Diamond 2) and chess (peak elo: 1600), so as a TLDR, 
-                            I'm a pretty simple guy. For my future, I have aspirations of one day running my own software development company, you know like Bills Gates or one of those other guys.
-                            However, in the mean time I plan on working as a software engineer where I can learn the ropes. Anyways, I'm sure by now you are tired of reading what seems like a 
-                            10 page essay, so please feel free to take a look around the different webpages of my E-Portfolio. Enjoy your stay!
-                        </p>
-                    </div>
+                  <Page />
                 </body>
               </Html>
             </Layer>
