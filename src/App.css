@@ -69,7 +69,29 @@ img
     color: #8080ff;
 }
 
+.projects-title
+{
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    height: 30vh;
+    width: 60vw;
+
+    align-self: center;
+    justify-content: center;
+
+    border-radius: 42px;
+
+    backdrop-filter: brightness(180%) blur(10px);
+    color: #8080ff;
+}
+
 .title h1
+{
+    font-size: 7vw;
+}
+
+.projects-title h1
 {
     font-size: 7vw;
 }
@@ -113,14 +135,15 @@ img
 
 .sub-header p
 {
-    backdrop-filter: brightness(110%) blur(26px);
+    backdrop-filter: brightness(180%);
+    filter: hue-rotate(20deg);
 
     width: 50%;
 
     border-radius: 36px;
     border-color: black;
     border-style:outset;
-    border-width: 3px;
+    border-width: 0px;
 
     padding: 26px 36px;
     

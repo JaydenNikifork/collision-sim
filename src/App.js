@@ -203,20 +203,11 @@ class Page extends React.Component {
   }
 }
 
-// class Scene extends React.Component {
-//   constructor() {
-//     super();
-//     this.state = {
-//       height: window.
-//     }
-//   }
-// }
-
 function App() {
   return (
     <div className='App'>
       <div className='list-data' style={{display: 'flex', maxHeight: window.innerHeight}}>
-          <Stage className='stage' width={window.innerWidth} height={window.innerHeight}>
+          <Stage className='stage' width={window.innerWidth} height={window.innerHeight + scrollbar.offset.y}>
             <Layer>
               <Html>
                 <body>
