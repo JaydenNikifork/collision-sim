@@ -116,13 +116,12 @@ img
 
 }
 
-.sub-header
+.project-container
 {
-    position: relative;
-    z-index: 1;
-    margin: 3%;
+    display: flex;
+    flex-direction: column;
 
-    width: 94%;
+    margin: 3vw;
 
     text-align: left;
     font-size: large;
@@ -133,12 +132,26 @@ img
     animation-timing-function: ease-out;
 }
 
-.sub-header p
+.project-container h1
+{
+    padding: 0px;
+    padding-left: 3vw;
+}
+
+.project-info
+{
+    display: flex;
+    flex-direction: row;
+    /* justify-content: center; */
+    align-content: center;
+}
+
+.project-info p
 {
     backdrop-filter: brightness(180%);
     filter: hue-rotate(20deg);
 
-    width: 50%;
+    width: 50vw;
 
     border-radius: 36px;
     border-color: black;
@@ -146,14 +159,81 @@ img
     border-width: 0px;
 
     padding: 26px 36px;
+    margin: 0px;
+    margin-right: 1vw;
     
     line-height: 225%;
     text-align: justify;
 }
 
+.project-image
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-top: 1vw;
+    padding-bottom: 1vw;
+    backdrop-filter: brightness(180%) hue-rotate(20deg);
+    border-radius: 46px;
+}
+
+.project-image img
+{
+    width: 35vw;
+    border-radius: 36px;
+}
+
+.project-image button
+{
+    z-index: 1;
+    width: 30px;
+    height: 30%;
+    font-family: inherit;
+    font-size: x-large;
+    font-weight: 900;
+    color: black;
+    transition: 0.3s;
+
+    border: none;
+    border-radius: 15px;
+
+    background: none;
+}
+
+.project-image button:hover
+{
+    background-color: #8080ff;
+    color: white;
+}
+
+.about
+{
+    margin: 3vw;
+}
+
+.about h1
+{
+    padding: 0px;
+    padding-left: 3vw;
+}
+
 .about p
 {
-    width: 94%;
+    backdrop-filter: brightness(180%);
+    filter: hue-rotate(20deg);
+
+    width: 88vw;
+
+    border-radius: 36px;
+    border-color: black;
+    border-style:outset;
+    border-width: 0px;
+
+    padding: 3vh 3vw;
+    
+    line-height: 225%;
+    text-align: justify;
+    font-size: large;
 }
 
 .images-container
