@@ -1,27 +1,25 @@
 import './App.css';
-import { Stage, Layer, Circle, Line } from 'react-konva';
+import { Stage, Layer, Circle } from 'react-konva';
 import React from 'react';
-import { useEffect } from 'react';
-import { pyth, area, momentum, elasCollision, getAngle, getXVel, getYVel, getRand } from './helpers';
+import { pyth, area, getAngle, getXVel, getYVel, getRand } from './helpers';
 import Scrollbar, { ScrollbarPlugin } from 'smooth-scrollbar';
 import { Html } from 'react-konva-utils';
-import { About, Projects } from './pages';
 
 var scrollPosX;
 var scrollPosY;
 var bounceSlow = 0.8;
 
 function update() {
-  for (let i = 0; i < cirData.length - 1; i++) {
-    for (let j = i; j < cirData.length; j++) {
-      if (i !== j && checkCollision(i, j)) {
-        collide(i, j);
+  for (let i = 0; i < cirData.length; i++) {
+    if (i < cirData.length - 1) {
+      for (let j = i; j < cirData.length; j++) {
+        if (i !== j && checkCollision(i, j)) {
+          collide(i, j);
+        }
       }
     }
     scrollPosX = scrollbar.offset.x;
     scrollPosY = scrollbar.offset.y;
-  }
-  for (let i = 0; i < cirData.length; i++) {
     wallBounce(i);
     cirData[i][2][0] += cirData[i][0][0];
     cirData[i][2][1] += cirData[i][0][1];
@@ -38,7 +36,6 @@ function collide(cir1, cir2) {
   let distance = pyth(cirData[cir1][2][0] - cirData[cir2][2][0], cirData[cir1][2][1] - cirData[cir2][2][1]);
   let radius = cirData[cir1][1] + cirData[cir2][1];
   let angle = getAngle(cirData[cir1][2][0] - cirData[cir2][2][0], cirData[cir1][2][1] - cirData[cir2][2][1]);
-  let normal = angle + Math.PI/2;
   
   if (distance < radius) {
     cirData[cir1][2][0] += (radius - distance) / 2 * Math.cos(angle);
@@ -51,10 +48,6 @@ function collide(cir1, cir2) {
   let m2 = area(cirData[cir2][1]);
   let angle1 = getAngle(cirData[cir1][0][0], cirData[cir1][0][1]);
   let angle2 = getAngle(cirData[cir2][0][0], cirData[cir2][0][1]);
-  // let v1X = (m1 - m2) / (m1 + m2) * cirData[cir1][0][0] + 2 * m2 / (m1 + m2) * cirData[cir2][0][0];
-  // let v1Y = (m1 - m2) / (m1 + m2) * cirData[cir1][0][1] + 2 * m2 / (m1 + m2) * cirData[cir2][0][1];
-  // let v2X = (m2 - m1) / (m1 + m2) * cirData[cir2][0][0] + 2 * m1 / (m1 + m2) * cirData[cir1][0][0];
-  // let v2Y = (m2 - m1) / (m1 + m2) * cirData[cir2][0][1] + 2 * m1 / (m1 + m2) * cirData[cir1][0][1];
 
   let v1 = Math.max(pyth(cirData[cir1][0][0], cirData[cir1][0][1]) * bounceSlow, 0);
   let v2 = Math.max(pyth(cirData[cir2][0][0], cirData[cir2][0][1]) * bounceSlow, 0);
@@ -91,33 +84,24 @@ class CollidingCircle extends React.Component {
     this.state = {
       index: props.index,
       pos: props.pos,
-      speed: props.speed,  // 2D Vector
+      speed: props.speed,
       radius: props.radius,
       color: props.color,
     }
   }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.pos !== prevProps.pos) {
+      this.setState({
+        pos: this.props.pos
+      });
+    }
+  }
+
   render() {
     return (
       <Circle x={this.state.pos[0]} y={this.state.pos[1]} radius={this.state.radius} fill={this.state.color} />
     );
-  }
-
-  componentDidMount() {
-    this.interval = setInterval(() => this.updatePos(this.state.speed[0], this.state.speed[1]), 1000/60);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  updatePos(x, y) {
-    var index = this.state.index;
-    this.setState({
-      pos: [cirData[index][2][0], cirData[index][2][1]]
-    });
-    this.setState({
-      speed: cirData[index][0]
-    });
   }
 }
 
@@ -125,17 +109,12 @@ var cirData = [];
 
 function generateCircles() {
   for (let i = 0; i < getRand(4, 7); i++) {
-    cirData.push([[getRand(-15, 15), getRand(-15, 15)], getRand(50, 200), 
+    cirData.push([[getRand(15, 15), getRand(-15, 15)], getRand(50, Math.min(window.innerHeight, window.innerWidth) / 3), 
                   [getRand(0, window.innerWidth), getRand(0, window.innerHeight)], '#8080ff'])
   }
 }
-generateCircles();
-// var cirData = [[[10, 2], 80, [300, 600], "#8080ff"],
-//                [[6, 12], 100, [600, 600], "#8080ff"],
-//                [[4, -12], 140, [600, 600], "#8080ff"]];
 
-var circles = cirData.map((data, index) => <CollidingCircle key={index} index={index} speed={data[0]} 
-                                                         radius={data[1]} pos={data[2]} color={data[3]} />);
+generateCircles();
 
 var options = {
   damping: 0.05
@@ -161,62 +140,28 @@ scrollbar.addListener(() => {
   }
 })
 
- const buttonList = [
-  ["About Me", 0],
-  ["Projects", 1]
-];
-
-function asdf(asd) {
-  console.log(asd);
-}
-
-class Page extends React.Component {
-  constructor() {
-    super();
-    this.pages = [
-      <About />,
-      <Projects />
-    ];
-    this.buttons = buttonList.map(function(item, index) {
-      return(
-        <button className="button" key={index} onClick={() => this.handleClick(index)}>{item[0]}</button>
-      );
-    }, this);
-    this.state = {
-      page: this.pages[0]
-    };
-  }  
-  
-  handleClick(index) {
-    this.setState({page: this.pages[index]});
-  }
-
-  render() {
-    return(
-      <>
-        <div className="tab-bar">
-          {this.buttons}
-        </div>
-        {this.state.page}
-      </>
-    );
-  }
+function Circles() {
+  var circles = cirData.map((data, index) => <CollidingCircle key={index} index={index} speed={data[0]} 
+                                                           radius={data[1]} pos={data[2]} color={data[3]} />);
+  return(
+    <>
+      {circles}
+    </>
+  );
 }
 
 function App() {
   return (
     <div className='App'>
       <div className='list-data' style={{display: 'flex', maxHeight: window.innerHeight}}>
-          <Stage className='stage' width={window.innerWidth} height={window.innerHeight + scrollbar.offset.y}>
+          <Stage className='stage' width={window.innerWidth * 2} height={window.innerHeight * 2}>
             <Layer>
-              <Html>
-                <body>
-                  <Page />
-                </body>
-              </Html>
+              <Circles />
             </Layer>
             <Layer>
-              {circles}
+              <Html>
+                <h1>Collision Sim</h1>
+              </Html>
             </Layer>
           </Stage>
       </div>
