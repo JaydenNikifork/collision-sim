@@ -1,8 +1,8 @@
-import App from './App';
 import React from 'react';
-import reportWebVitals from './reportWebVitals';
 import './index.css';
 import ReactDOM from 'react-dom';
+import reportWebVitals from './reportWebVitals';
+import App from './App';
 
 function tick() {
   ReactDOM.render(
